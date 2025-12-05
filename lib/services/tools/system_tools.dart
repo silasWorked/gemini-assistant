@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'tool_base.dart';
 
-
 class SystemInfoTool extends Tool {
   @override
   String get name => 'system_info';
@@ -24,7 +23,6 @@ class SystemInfoTool extends Tool {
       info.writeln('Locale: ${Platform.localeName}');
       info.writeln('Dart Version: ${Platform.version}');
 
-      
       final home =
           Platform.environment['USERPROFILE'] ??
           Platform.environment['HOME'] ??
@@ -44,7 +42,6 @@ class SystemInfoTool extends Tool {
     }
   }
 }
-
 
 class ListProcessesTool extends Tool {
   @override
@@ -89,7 +86,6 @@ class ListProcessesTool extends Tool {
   }
 }
 
-
 class GetProcessPathTool extends Tool {
   @override
   String get name => 'get_process_path';
@@ -111,14 +107,12 @@ class GetProcessPathTool extends Tool {
     try {
       final processName = args['process_name'] as String;
 
-      
       final nameWithoutExt = processName.replaceAll(
         RegExp(r'\.exe$', caseSensitive: false),
         '',
       );
 
       if (Platform.isWindows) {
-        
         final result = await Process.run('powershell', [
           '-NoProfile',
           '-Command',
@@ -148,7 +142,6 @@ class GetProcessPathTool extends Tool {
           data: paths.join('\n'),
         );
       } else {
-        
         final result = await Process.run('ps', [
           '-eo',
           'comm,args',
@@ -167,7 +160,6 @@ class GetProcessPathTool extends Tool {
     }
   }
 }
-
 
 class KillProcessTool extends Tool {
   @override
@@ -201,7 +193,6 @@ class KillProcessTool extends Tool {
   }
 }
 
-
 class DiskInfoTool extends Tool {
   @override
   String get name => 'disk_info';
@@ -217,10 +208,9 @@ class DiskInfoTool extends Tool {
     try {
       ProcessResult result;
       if (Platform.isWindows) {
-        result = await Process.run('wmic', [
-          'logicaldisk',
-          'get',
-          'size,freespace,caption',
+        result = await Process.run('powershell', [
+          '-Command',
+          'Get-Volume | Where-Object { \$_.DriveLetter } | Select-Object DriveLetter, @{N=\"SizeGB\";E={[math]::Round(\$_.Size/1GB,2)}}, @{N=\"FreeGB\";E={[math]::Round(\$_.SizeRemaining/1GB,2)}}, @{N=\"UsedPercent\";E={[math]::Round(100-(\$_.SizeRemaining/\$_.Size*100),1)}} | Format-Table -AutoSize | Out-String',
         ], runInShell: true);
       } else {
         result = await Process.run('df', ['-h'], runInShell: true);
@@ -243,7 +233,6 @@ class DiskInfoTool extends Tool {
     }
   }
 }
-
 
 class NetworkInfoTool extends Tool {
   @override

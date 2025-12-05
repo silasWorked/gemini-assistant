@@ -27,6 +27,7 @@ class ChatViewModel extends ChangeNotifier {
   bool _isFromRestrictedRegion = false;
   bool _settingsLoaded = false;
   AppLanguage _language = AppLanguage.ru;
+  GeminiModel _selectedModel = GeminiModel.gemini20Flash;
 
   List<ChatSession> get sessions => List.unmodifiable(_sessions);
   ChatSession? get currentSession => _currentSession;
@@ -42,6 +43,7 @@ class ChatViewModel extends ChangeNotifier {
   bool get isFromRestrictedRegion => _isFromRestrictedRegion;
   bool get settingsLoaded => _settingsLoaded;
   AppLanguage get language => _language;
+  GeminiModel get selectedModel => _selectedModel;
 
   ChatViewModel() {
     _loadSettings();
@@ -49,11 +51,9 @@ class ChatViewModel extends ChangeNotifier {
 
   Future<void> _loadSettings() async {
     try {
-      
       final launched = await _storage.read(key: 'first_launch_complete');
       _isFirstLaunch = launched != 'true';
 
-      
       if (_isFirstLaunch) {
         _isFromRestrictedRegion = await _checkRestrictedRegion();
       }
@@ -71,11 +71,13 @@ class ChatViewModel extends ChangeNotifier {
       _toolsEnabled = toolsEnabled != 'false';
       _geminiService?.setToolsEnabled(_toolsEnabled);
 
-      
       final langStr = await _storage.read(key: 'language');
       _language = langStr == 'en' ? AppLanguage.en : AppLanguage.ru;
 
-      
+      final modelStr = await _storage.read(key: 'selected_model');
+      _selectedModel = GeminiModel.fromApiName(modelStr);
+      _geminiService?.setModel(_selectedModel);
+
       final categoriesJson = await _storage.read(key: 'tool_categories');
       if (categoriesJson != null) {
         final List<dynamic> savedCategories = jsonDecode(categoriesJson);
@@ -91,7 +93,6 @@ class ChatViewModel extends ChangeNotifier {
       }
       _updateEnabledTools();
 
-      
       final proxyJson = await _storage.read(key: 'proxy_settings');
       if (proxyJson != null) {
         _proxySettings = ProxySettings.fromJson(jsonDecode(proxyJson));
@@ -105,7 +106,6 @@ class ChatViewModel extends ChangeNotifier {
         }
       }
 
-      
       _sessions = await _historyService.loadSessions();
       if (_sessions.isEmpty) {
         _currentSession = ChatSession.create();
@@ -128,7 +128,6 @@ class ChatViewModel extends ChangeNotifier {
       final httpClient = HttpClient();
       httpClient.connectionTimeout = const Duration(seconds: 5);
 
-      
       final request = await httpClient.getUrl(
         Uri.parse('http://ip-api.com/json/?fields=countryCode'),
       );
@@ -139,12 +138,10 @@ class ChatViewModel extends ChangeNotifier {
         final data = jsonDecode(body);
         final countryCode = data['countryCode'] as String?;
 
-        
         final restrictedCountries = ['RU', 'BY'];
         return restrictedCountries.contains(countryCode);
       }
     } catch (e) {
-      
       return true;
     }
     return false;
@@ -178,6 +175,13 @@ class ChatViewModel extends ChangeNotifier {
       key: 'language',
       value: lang == AppLanguage.en ? 'en' : 'ru',
     );
+    notifyListeners();
+  }
+
+  Future<void> setSelectedModel(GeminiModel model) async {
+    _selectedModel = model;
+    _geminiService?.setModel(model);
+    await _storage.write(key: 'selected_model', value: model.apiName);
     notifyListeners();
   }
 
@@ -249,10 +253,8 @@ class ChatViewModel extends ChangeNotifier {
       _sessions.insert(0, _currentSession!);
     }
 
-    
     final targetSession = _currentSession!;
 
-    
     final userMessage = ChatMessage(text: text, isUser: true);
     targetSession.messages.add(userMessage);
     targetSession.updatedAt = DateTime.now();
@@ -261,25 +263,21 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      
       final history = targetSession.messages
           .where((m) => m != userMessage)
           .map((m) => m.toJson())
           .toList();
 
-      
       ChatMessage? currentToolMessage;
       final response = await _geminiService!.sendMessage(
         text,
         history: history,
         onToolCall: (toolInfo) {
-          
           currentToolMessage = ChatMessage(text: toolInfo, isUser: false);
           targetSession.messages.add(currentToolMessage!);
           notifyListeners();
         },
         onToolComplete: (toolName) {
-          
           if (currentToolMessage != null) {
             final index = targetSession.messages.indexOf(currentToolMessage!);
             if (index != -1) {
@@ -294,17 +292,14 @@ class ChatViewModel extends ChangeNotifier {
         },
       );
 
-      
       final assistantMessage = ChatMessage(text: response, isUser: false);
       targetSession.messages.add(assistantMessage);
       targetSession.updatedAt = DateTime.now();
 
-      
       if (targetSession.messages.length <= 2) {
         targetSession.updateTitle();
       }
 
-      
       await _historyService.saveSession(targetSession);
     } catch (e) {
       _errorMessage = e.toString();

@@ -1,3 +1,21 @@
+enum GeminiModel {
+  gemini25Flash('gemini-2.5-flash', 'Gemini 2.5 Flash'),
+  gemini20Flash('gemini-2.0-flash', 'Gemini 2.0 Flash'),
+  gemini20FlashLite('gemini-2.0-flash-lite', 'Gemini 2.0 Flash Lite'),
+  gemini25FlashLite('gemini-2.5-flash-lite', 'Gemini 2.5 Flash Lite'),
+  gemini25Pro('gemini-2.5-pro', 'Gemini 2.5 Pro');
+
+  final String apiName;
+  final String displayName;
+  const GeminiModel(this.apiName, this.displayName);
+
+  static GeminiModel fromApiName(String? name) {
+    return GeminiModel.values.firstWhere(
+      (m) => m.apiName == name,
+      orElse: () => GeminiModel.gemini20Flash,
+    );
+  }
+}
 
 class ToolCategory {
   final String id;
@@ -29,7 +47,6 @@ class ToolCategory {
     );
   }
 }
-
 
 class ProxySettings {
   bool enabled;
@@ -73,7 +90,6 @@ class ProxySettings {
     );
   }
 }
-
 
 class ToolCategories {
   static List<ToolCategory> getDefaults() => [

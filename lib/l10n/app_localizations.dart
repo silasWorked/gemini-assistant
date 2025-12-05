@@ -15,7 +15,6 @@ class AppLocalizations {
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
 
-  
   String get appTitle => _t('AI Ассистент', 'AI Assistant');
   String get newChat => _t('Новый чат', 'New Chat');
   String get settings => _t('Настройки', 'Settings');
@@ -34,7 +33,6 @@ class AppLocalizations {
   String get loading => _t('Загрузка...', 'Loading...');
   String get copied => _t('Скопировано', 'Copied');
 
-  
   String get clearChat => _t('Очистить чат', 'Clear chat');
   String get typeMessage => _t('Напишите сообщение...', 'Type a message...');
   String get thinking => _t('Думаю...', 'Thinking...');
@@ -45,7 +43,6 @@ class AppLocalizations {
   String get collapseSidebar => _t('Свернуть панель', 'Collapse sidebar');
   String get expandSidebar => _t('Развернуть панель', 'Expand sidebar');
 
-  
   String get apiKey => _t('API Ключ', 'API Key');
   String get enterApiKey => _t('Введите API ключ', 'Enter API key');
   String get apiKeyHint =>
@@ -82,6 +79,8 @@ class AppLocalizations {
       _t('Плавные переходы и эффекты', 'Smooth transitions and effects');
   String get on => _t('Вкл', 'On');
   String get off => _t('Выкл', 'Off');
+  String get modelLabel => _t('Модель', 'Model');
+  String get geminiModel => _t('Модель Gemini', 'Gemini Model');
   String get proxy => _t('Прокси', 'Proxy');
   String get proxyHost => _t('Хост', 'Host');
   String get proxyPort => _t('Порт', 'Port');
@@ -104,7 +103,18 @@ class AppLocalizations {
   String get passwordOptional => _t('Пароль (опц.)', 'Password (opt.)');
   String get checking => _t('Проверка...', 'Checking...');
 
-  
+  String get about => _t('О приложении', 'About');
+  String get appVersion => _t('Версия', 'Version');
+  String get developer => _t('Разработчик', 'Developer');
+  String get links => _t('Ссылки', 'Links');
+  String get appDescription => _t(
+    'Мощный AI ассистент с доступом к инструментам операционной системы, созданный на Flutter. Работает с Google Gemini API.',
+    'A powerful AI assistant with OS-level tools, built with Flutter. Powered by Google Gemini API.',
+  );
+  String get github => _t('GitHub', 'GitHub');
+  String get website => _t('Веб-сайт', 'Website');
+  String get telegram => _t('Telegram', 'Telegram');
+
   String get toolsAI => _t('Инструменты AI', 'AI Tools');
   String get toolsEnabled => _t('Инструменты включены', 'Tools enabled');
   String get toolsDisabled => _t('Инструменты выключены', 'Tools disabled');
@@ -113,7 +123,6 @@ class AppLocalizations {
     'AI can perform actions on your computer',
   );
 
-  
   String get fileSystem => _t('Файловая система', 'File System');
   String get fileSystemDesc =>
       _t('Работа с файлами и папками', 'Work with files and folders');
@@ -131,7 +140,6 @@ class AppLocalizations {
   String get memoryCategory => _t('Память', 'Memory');
   String get memoryDesc => _t('Запоминание информации', 'Remember information');
 
-  
   String get descReadFile => _t('Чтение файлов', 'Read files');
   String get descWriteFile => _t('Запись файлов', 'Write files');
   String get descListDir => _t('Список папки', 'List directory');
@@ -160,7 +168,6 @@ class AppLocalizations {
   String get descListMemories => _t('Список сохранённого', 'List saved');
   String get descForgetMemory => _t('Забыть информацию', 'Forget information');
 
-  
   String get securityTitle => _t('Безопасность', 'Security');
   String get securityText => _t(
     'AI будет спрашивать подтверждение перед опасными операциями (удаление, завершение процессов)',
@@ -173,7 +180,6 @@ class AppLocalizations {
     'AI can execute commands on your computer. Be careful with requests to delete files or modify the system.',
   );
 
-  
   String get memoryEmpty => _t('Память пуста', 'Memory is empty');
   String get memoryEmptyHint =>
       _t('Попросите AI запомнить что-нибудь', 'Ask AI to remember something');
@@ -193,7 +199,7 @@ class AppLocalizations {
     if (language == AppLanguage.en) {
       return count == 1 ? 'entry' : 'entries';
     }
-    
+
     if (count % 10 == 1 && count % 100 != 11) return 'запись';
     if (count % 10 >= 2 &&
         count % 10 <= 4 &&
@@ -202,7 +208,6 @@ class AppLocalizations {
     return 'записей';
   }
 
-  
   String get typePath => _t('Путь', 'Path');
   String get typeCommand => _t('Команда', 'Command');
   String get typePreference => _t('Настройка', 'Preference');
@@ -211,11 +216,9 @@ class AppLocalizations {
   String get typeProject => _t('Проект', 'Project');
   String get typeOther => _t('Другое', 'Other');
 
-  
   String get trayOpen => _t('Открыть', 'Open');
   String get trayExit => _t('Выход', 'Exit');
 
-  
   String get proxySetupTitle => _t('Настройка прокси', 'Proxy Setup');
   String get proxySetupDesc => _t(
     'Похоже, вы находитесь в регионе, где Google API может быть недоступен. Рекомендуем настроить прокси.',
@@ -224,7 +227,6 @@ class AppLocalizations {
   String get skip => _t('Пропустить', 'Skip');
   String get apply => _t('Применить', 'Apply');
 
-  
   String get toolReadFile => _t('Читать файл', 'Read file');
   String get toolWriteFile => _t('Записать файл', 'Write file');
   String get toolListDir => _t('Список файлов', 'List directory');
@@ -252,7 +254,6 @@ class AppLocalizations {
   String get toolListMemories => _t('Список памяти', 'List memories');
   String get toolForgetMemory => _t('Забыть', 'Forget');
 
-  
   String memoryTypeName(String type) {
     switch (type) {
       case 'filePath':
@@ -272,7 +273,6 @@ class AppLocalizations {
     }
   }
 
-  
   String categoryTitle(String id) {
     switch (id) {
       case 'files':
@@ -292,7 +292,6 @@ class AppLocalizations {
     }
   }
 
-  
   String categoryDescription(String id) {
     switch (id) {
       case 'files':
@@ -315,7 +314,6 @@ class AppLocalizations {
     }
   }
 
-  
   String toolDescription(String name) {
     switch (name) {
       case 'read_file':
@@ -375,7 +373,6 @@ class AppLocalizations {
     }
   }
 
-  
   String _t(String ru, String en) => language == AppLanguage.ru ? ru : en;
 }
 

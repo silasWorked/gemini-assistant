@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
+import '../models/app_settings.dart';
 import 'tools/tool_registry.dart';
 import 'tools/tool_base.dart';
 
 class GeminiService {
   final String apiKey;
-  static const String baseUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models';
+  static const String baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+  //
   final ToolRegistry _toolRegistry = ToolRegistry();
   bool _toolsEnabled = true;
   Set<String> _enabledTools = {};
@@ -17,11 +18,18 @@ class GeminiService {
   String? _proxyUsername;
   String? _proxyPassword;
   http.Client? _httpClient;
+  GeminiModel _model = GeminiModel.gemini20Flash;
 
   GeminiService(this.apiKey) {
     _toolRegistry.initialize();
     _enabledTools = _toolRegistry.allTools.map((t) => t.name).toSet();
   }
+
+  void setModel(GeminiModel model) {
+    _model = model;
+  }
+
+  GeminiModel get model => _model;
 
   void setToolsEnabled(bool enabled) {
     _toolsEnabled = enabled;
@@ -48,7 +56,6 @@ class GeminiService {
       proxy.findProxy = (uri) => 'PROXY $_proxyHost:$_proxyPort';
       proxy.badCertificateCallback = (cert, host, port) => true;
 
-      
       if (_proxyUsername != null && _proxyUsername!.isNotEmpty) {
         proxy.addProxyCredentials(
           _proxyHost!,
@@ -65,7 +72,6 @@ class GeminiService {
     return _httpClient!;
   }
 
-  
   String get _systemInfo {
     final home =
         Platform.environment['USERPROFILE'] ??
@@ -89,7 +95,6 @@ SYSTEM INFORMATION:
 ''';
   }
 
-  
   String get _systemPrompt =>
       '''
 You are a helpful AI assistant with access to the user's computer. You can perform various operations on the operating system.
@@ -150,7 +155,6 @@ When showing file contents or command output, format it nicely using markdown co
     try {
       final contents = <Map<String, dynamic>>[];
 
-      
       contents.add({
         'role': 'user',
         'parts': [
@@ -167,12 +171,10 @@ When showing file contents or command output, format it nicely using markdown co
         ],
       });
 
-      
       if (history != null) {
         contents.addAll(history);
       }
 
-      
       contents.add({
         'role': 'user',
         'parts': [
@@ -196,7 +198,6 @@ When showing file contents or command output, format it nicely using markdown co
     Function(String)? onToolComplete,
     int depth = 0,
   }) async {
-    
     if (depth > 10) {
       return 'Maximum tool call depth reached. Please try a simpler request.';
     }
@@ -211,7 +212,6 @@ When showing file contents or command output, format it nicely using markdown co
       },
     };
 
-    
     if (_toolsEnabled && _enabledTools.isNotEmpty) {
       final enabledDeclarations = _toolRegistry.allTools
           .where((t) => _enabledTools.contains(t.name))
@@ -226,7 +226,7 @@ When showing file contents or command output, format it nicely using markdown co
 
     final response = await _client
         .post(
-          Uri.parse('$baseUrl/gemini-2.0-flash:generateContent'),
+          Uri.parse('$baseUrl/${_model.apiName}:generateContent'),
           headers: {
             'Content-Type': 'application/json',
             'x-goog-api-key': apiKey,
@@ -252,7 +252,6 @@ When showing file contents or command output, format it nicely using markdown co
     final candidate = data['candidates'][0];
     final parts = candidate['content']['parts'] as List;
 
-    
     for (final part in parts) {
       if (part['functionCall'] != null) {
         final functionCall = part['functionCall'];
@@ -261,10 +260,8 @@ When showing file contents or command output, format it nicely using markdown co
           functionCall['args'] ?? {},
         );
 
-        
         onToolCall?.call('🔧 Вызов инструмента: $functionName');
 
-        
         ToolResult result;
         try {
           result = await _toolRegistry
@@ -283,10 +280,8 @@ When showing file contents or command output, format it nicely using markdown co
           );
         }
 
-        
         onToolComplete?.call(functionName);
 
-        
         contents.add({
           'role': 'model',
           'parts': [
@@ -296,7 +291,6 @@ When showing file contents or command output, format it nicely using markdown co
           ],
         });
 
-        
         contents.add({
           'role': 'user',
           'parts': [
@@ -309,7 +303,6 @@ When showing file contents or command output, format it nicely using markdown co
           ],
         });
 
-        
         return await _sendRequest(
           contents,
           onToolCall: onToolCall,
@@ -319,14 +312,12 @@ When showing file contents or command output, format it nicely using markdown co
       }
     }
 
-    
     for (final part in parts) {
       if (part['text'] != null) {
         return part['text'] as String;
       }
     }
 
-    
     if (depth > 0) {
       return 'Операция выполнена.';
     }

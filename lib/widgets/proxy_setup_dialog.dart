@@ -139,7 +139,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Row(
               children: [
                 Container(
@@ -183,7 +182,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
 
             const SizedBox(height: 20),
 
-            
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
@@ -219,7 +217,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
 
             const SizedBox(height: 24),
 
-            
             Row(
               children: [
                 Expanded(
@@ -267,7 +264,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
 
             const SizedBox(height: 16),
 
-            
             if (_checkResult != null)
               Container(
                 width: double.infinity,
@@ -302,10 +298,8 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
                 ),
               ),
 
-            
             Row(
               children: [
-                
                 OutlinedButton.icon(
                   onPressed: _isChecking ? null : _checkProxy,
                   icon: _isChecking
@@ -331,7 +325,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
 
                 const Spacer(),
 
-                
                 TextButton(
                   onPressed: _skipProxy,
                   style: TextButton.styleFrom(
@@ -346,7 +339,6 @@ class _ProxySetupDialogState extends State<ProxySetupDialog> {
 
                 const SizedBox(width: 8),
 
-                
                 FilledButton(
                   onPressed: _saveAndContinue,
                   style: FilledButton.styleFrom(

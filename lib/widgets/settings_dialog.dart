@@ -5,6 +5,7 @@ import '../viewmodels/chat_viewmodel.dart';
 import '../models/app_settings.dart';
 import '../l10n/app_localizations.dart';
 import 'api_key_dialog.dart';
+import 'about_dialog.dart';
 
 class SettingsDialog extends StatelessWidget {
   const SettingsDialog({super.key});
@@ -54,7 +55,6 @@ class SettingsDialog extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              
               _SettingsSection(
                 title: AppLocalizations.of(context).apiKey,
                 child: Consumer<ChatViewModel>(
@@ -94,7 +94,6 @@ class SettingsDialog extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              
               _SettingsSection(
                 title: AppLocalizations.of(context).proxy,
                 child: const _ProxySettingsWidget(),
@@ -102,7 +101,6 @@ class SettingsDialog extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              
               _SettingsSection(
                 title: AppLocalizations.of(context).appearance,
                 child: Consumer<ChatViewModel>(
@@ -181,22 +179,44 @@ class SettingsDialog extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFFB0B0B0),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        showDialog(
+                          context: context,
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          builder: (context) => const AboutAppDialog(),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFF6366F1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                      ),
+                      child: const Text('About'),
                     ),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context).close,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFFB0B0B0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).close,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -221,7 +241,6 @@ class _ProxySettingsWidgetState extends State<_ProxySettingsWidget> {
   late TextEditingController _passwordController;
   bool _isEditing = false;
 
-  
   bool _isChecking = false;
   String? _checkResult;
   bool? _checkSuccess;
@@ -263,12 +282,10 @@ class _ProxySettingsWidgetState extends State<_ProxySettingsWidget> {
       final httpClient = HttpClient();
       httpClient.connectionTimeout = const Duration(seconds: 10);
 
-      
       final proxyUrl = proxy.proxyUrl;
       if (proxyUrl != null) {
         httpClient.findProxy = (uri) => 'PROXY ${proxy.host}:${proxy.port}';
 
-        
         if (proxy.username != null && proxy.username!.isNotEmpty) {
           httpClient.addProxyCredentials(
             proxy.host,
@@ -279,9 +296,8 @@ class _ProxySettingsWidgetState extends State<_ProxySettingsWidget> {
         }
       }
 
-      
       final request = await httpClient.getUrl(
-        Uri.parse('https://generativelanguage.googleapis.com'),
+        Uri.parse('https://www.google.com'),
       );
       final response = await request.close();
 
@@ -424,7 +440,7 @@ class _ProxySettingsWidgetState extends State<_ProxySettingsWidget> {
                 ],
               ),
             ),
-            
+
             if (proxy.host.isNotEmpty) ...[
               _isChecking
                   ? const SizedBox(
@@ -463,7 +479,7 @@ class _ProxySettingsWidgetState extends State<_ProxySettingsWidget> {
             ),
           ],
         ),
-        
+
         if (_checkResult != null) ...[
           const SizedBox(height: 8),
           Container(

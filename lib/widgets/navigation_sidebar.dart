@@ -34,7 +34,6 @@ class NavigationSidebar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -67,7 +66,6 @@ class NavigationSidebar extends StatelessWidget {
             ),
           ),
 
-          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: _AnimatedButton(onTap: onNewChat),
@@ -75,7 +73,6 @@ class NavigationSidebar extends StatelessWidget {
 
           const SizedBox(height: 24),
 
-          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -96,7 +93,6 @@ class NavigationSidebar extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          
           Expanded(
             child: Consumer<ChatViewModel>(
               builder: (context, viewModel, child) {
@@ -134,21 +130,18 @@ class NavigationSidebar extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          
           _NavigationItem(
             icon: Icons.psychology_outlined,
             label: AppLocalizations.of(context).memory,
             onTap: onMemoryPage ?? () {},
           ),
 
-          
           _NavigationItem(
             icon: Icons.build_outlined,
             label: AppLocalizations.of(context).tools,
             onTap: onToolsPage ?? () {},
           ),
 
-          
           _NavigationItem(
             icon: Icons.settings_outlined,
             label: AppLocalizations.of(context).settings,
@@ -161,7 +154,6 @@ class NavigationSidebar extends StatelessWidget {
     );
   }
 }
-
 
 class _AnimatedButton extends StatefulWidget {
   final VoidCallback onTap;
@@ -242,7 +234,6 @@ class _AnimatedButtonState extends State<_AnimatedButton> {
     );
   }
 }
-
 
 class _ChatHistoryItem extends StatefulWidget {
   final String title;
@@ -328,7 +319,6 @@ class _ChatHistoryItemState extends State<_ChatHistoryItem> {
   }
 }
 
-
 class _NavigationItem extends StatefulWidget {
   final IconData icon;
   final String label;
@@ -412,7 +402,6 @@ class _NavigationItemState extends State<_NavigationItem> {
     );
   }
 }
-
 
 class _PulsingDot extends StatefulWidget {
   final Color color;
