@@ -9,6 +9,8 @@
 
 AI-powered desktop assistant built with Flutter and Google Gemini 2.0 Flash API with full OS interaction capabilities.
 
+> ⚠️ **Note:** OS tools are optimized for **Windows**. On macOS/Linux the chat works, but some tools (commands, processes, system info) may not work correctly or require adaptation.
+
 ## ✨ Features
 
 - 💬 **Natural Conversation** with Google Gemini AI (2.0 Flash model)
