@@ -78,14 +78,25 @@ AI-powered desktop assistant built with Flutter and Google Gemini 2.0 Flash API 
 
 ## 📋 Prerequisites
 
-- Flutter SDK 3.10.3 or higher
 - Google Gemini API key from [ai.google.dev](https://ai.google.dev)
 
 ## 🚀 Installation
 
+### Option 1: Download Release (Recommended)
+
+1. Go to [Releases](https://github.com/silasWorked/gemini-assistant/releases/latest)
+2. Download `gemini-assistant-windows-x64.zip`
+3. Extract to any folder
+4. Run `gemini_assistant.exe`
+5. Enter your API key in settings
+
+### Option 2: Build from Source
+
+**Requirements:** Flutter SDK 3.10.3 or higher
+
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/gemini-assistant.git
+git clone https://github.com/silasWorked/gemini-assistant.git
 cd gemini-assistant
 ```
 
